@@ -1,0 +1,125 @@
+{% extends 'booking/base.html' %}
+
+{% block title %}Всі номери - Система бронювання{% endblock %}
+
+{% block extra_css %}
+<style>
+    .rooms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    .room-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .room-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .room-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+    }
+    
+    .room-header h3 {
+        font-size: 1.5em;
+        margin-bottom: 5px;
+    }
+    
+    .room-body {
+        padding: 20px;
+    }
+    
+    .room-info {
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+    
+    .room-info p {
+        margin: 8px 0;
+        color: #555;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .price {
+        font-size: 1.8em;
+        color: #28a745;
+        font-weight: bold;
+        margin: 15px 0;
+    }
+    
+    .btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 5px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1em;
+        transition: opacity 0.3s;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .btn:hover {
+        opacity: 0.9;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+    
+    .empty-state-icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Доступні номери</h2>
+
+{% if rooms %}
+    <div class="rooms-grid">
+        {% for room in rooms %}
+            <div class="room-card">
+                <div class="room-header">
+                    <h3>{{ room.name }}</h3>
+                </div>
+                <div class="room-body">
+                    <div class="room-info">
+                        <p><span class="info-label">Опис:</span> {{ room.description }}</p>
+                        <p><span class="info-label">Місткість:</span> {{ room.capacity }} осіб</p>
+                    </div>
+                    <div class="price">💰 ₴{{ room.price }}/ніч</div>
+                    <a href="{% url 'room_detail' room.id %}" class="btn">Забронювати</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">🏨</div>
+        <h3>Номери не знайдені</h3>
+        <p>Наразі немає доступних номерів. Будь ласка, повертайтеся пізніше.</p>
+    </div>
+{% endif %}
+{% endblock %}

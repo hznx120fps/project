@@ -1,0 +1,224 @@
+{% extends 'booking/base.html' %}
+
+{% block title %}{{ room.name }} - Система бронювання{% endblock %}
+
+{% block extra_css %}
+<style>
+    .room-detail-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 30px;
+    }
+    
+    .room-details {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .room-details h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+        font-size: 2em;
+    }
+    
+    .detail-item {
+        margin: 20px 0;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+    
+    .detail-value {
+        font-size: 1.1em;
+        color: #333;
+    }
+    
+    .price-large {
+        font-size: 2.5em;
+        color: #28a745;
+        font-weight: bold;
+    }
+    
+    .booking-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        border: 2px solid #667eea;
+    }
+    
+    .booking-form h3 {
+        color: #667eea;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+        box-sizing: border-box;
+    }
+    
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-book {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: opacity 0.3s;
+    }
+    
+    .btn-book:hover {
+        opacity: 0.9;
+    }
+    
+    .btn-book:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .bookings-list {
+        margin-top: 30px;
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .bookings-list h4 {
+        color: #856404;
+        margin-bottom: 15px;
+    }
+    
+    .booking-item {
+        background: white;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 5px;
+        border-left: 3px solid #ffc107;
+    }
+    
+    .login-prompt {
+        background: #e7f3ff;
+        padding: 20px;
+        border-radius: 5px;
+        border-left: 4px solid #2196F3;
+        color: #1565c0;
+    }
+    
+    .login-prompt a {
+        color: #1565c0;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+        .room-detail-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="room-detail-container">
+    <div class="room-details">
+        <h2>{{ room.name }}</h2>
+        
+        <div class="detail-item">
+            <div class="detail-label">Опис</div>
+            <div class="detail-value">{{ room.description }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Місткість</div>
+            <div class="detail-value">👥 {{ room.capacity }} осіб</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Ціна за ніч</div>
+            <div class="price-large">₴{{ room.price }}</div>
+        </div>
+    </div>
+    
+    <div class="booking-form-container">
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'create_booking' room.id %}" class="booking-form">
+                {% csrf_token %}
+                <h3>🗓️ Забронировать комнату</h3>
+                
+                <div class="form-group">
+                    <label for="start_date">Дата і час початку:</label>
+                    <input type="datetime-local" id="start_date" name="start_date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="end_date">Дата і час закінчення:</label>
+                    <input type="datetime-local" id="end_date" name="end_date" required>
+                </div>
+                
+                <button type="submit" class="btn-book">✓ Забронювати</button>
+            </form>
+        {% else %}
+            <div class="login-prompt">
+                <strong>Потрібна авторизація</strong><br>
+                Для бронювання номеру необхідно <a href="{% url 'admin:login' %}">уйти до системи</a>
+            </div>
+        {% endif %}
+        
+        {% if bookings %}
+            <div class="bookings-list">
+                <h4>⚠️ Часи, коли номер занятий:</h4>
+                {% for booking in bookings %}
+                    <div class="booking-item">
+                        📅 {{ booking.start_date|date:"d.m.Y H:i" }} - {{ booking.end_date|date:"d.m.Y H:i" }}
+                        <br>
+                        <small>Статус: <strong>{{ booking.get_status_display }}</strong></small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<p style="margin-top: 40px; text-align: center;">
+    <a href="{% url 'room_list' %}" style="color: #667eea; text-decoration: none;">← Повернутись до переліку номерів</a>
+</p>
+{% endblock %}
