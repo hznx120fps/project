@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-rql3e)@%81@=))%lx+zh8@dmpj@es1gnjl@oa(+mkk#sm=s%xz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'booking',  
 ]
 
 MIDDLEWARE = [
@@ -54,7 +56,9 @@ ROOT_URLCONF = 'booking_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+
+        'DIRS': [BASE_DIR / 'templates'],  # ← ДОБАВИЛИ
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -102,9 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kyiv'
 
 USE_I18N = True
 
@@ -115,3 +119,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [BASE_DIR / 'static']  # ← ДОБАВИЛИ
+
+
+# Media файлы (картинки и т.д.)
+MEDIA_URL = '/media/'  # ← ДОБАВИЛИ
+MEDIA_ROOT = BASE_DIR / 'media'  # ← ДОБАВИЛИ
+
+
+# тип id для моделей
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # ← ДОБАВИЛИ
