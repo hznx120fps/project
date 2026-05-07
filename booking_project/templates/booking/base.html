@@ -3,118 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Система бронирования комнат{% endblock %}</title>
+    <title>{% block title %}{{ settings.site_title }}{% endblock %}</title>
     <style>
+        :root {
+            --primary-color: {{ settings.primary_color }};
+            --secondary-color: {{ settings.secondary_color }};
+            --background-color: {{ settings.background_color }};
+            --text-color: {{ settings.text_color }};
+            --surface-color: #ffffff;
+            --border-color: rgba(15, 23, 42, 0.08);
+            --shadow-color: rgba(15, 23, 42, 0.12);
+            --page-bg: linear-gradient(180deg, rgba(245, 247, 250, 1) 0%, rgba(255, 255, 255, 1) 100%);
+            --card-bg: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #475569;
+            --border-light: #e5e7eb;
+        }
+
+        html[data-theme="dark"] {
+            --surface-color: #1f2937;
+            --page-bg: linear-gradient(180deg, rgba(15, 23, 42, 1) 0%, rgba(31, 41, 55, 1) 100%);
+            --card-bg: #111827;
+            --text-primary: #f3f4f6;
+            --text-secondary: #d1d5db;
+            --border-light: #374151;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--page-bg);
             min-height: 100vh;
-            padding: 20px;
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        nav {
-            background: #f8f9fa;
-            padding: 15px 30px;
+
+        .page-shell {
+            min-height: 100vh;
             display: flex;
-            gap: 20px;
-            border-bottom: 1px solid #e0e0e0;
+            flex-direction: column;
+            background: var(--background-color);
         }
-        
-        nav a {
+
+        .container {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: #fff;
+            padding: 28px 0 18px;
+        }
+
+        .header-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .site-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .site-brand span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+
+        .site-brand h1 {
+            font-size: 1.8rem;
+            letter-spacing: -0.04em;
+        }
+
+        .site-description {
+            margin-top: 10px;
+            max-width: 720px;
+            line-height: 1.75;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-link,
+        .nav-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 18px;
+            border-radius: 999px;
+            font-weight: 700;
             text-decoration: none;
-            color: #667eea;
-            font-weight: 600;
-            transition: color 0.3s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            border: none;
+            font: inherit;
+            cursor: pointer;
         }
-        
-        nav a:hover {
-            color: #764ba2;
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
-        
+
+        .nav-link:hover,
+        .nav-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
+        }
+
+        .nav-action {
+            color: var(--primary-color);
+            background: #fff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .nav-action.admin-link {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.24);
+        }
+
+        .theme-toggle {
+            color: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
+        }
+
+        nav form {
+            display: inline-flex;
+            margin: 0;
+        }
+
+        nav button {
+            border: none;
+            background: none;
+            font: inherit;
+            cursor: pointer;
+            color: inherit;
+            padding: 0;
+        }
+
         main {
-            padding: 40px;
+            padding: 42px 0 72px;
         }
-        
+
         .messages {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
-        
+
         .message {
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border-left: 4px solid;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            border-radius: 16px;
+            border-left: 5px solid;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.05);
         }
-        
+
         .message.success {
-            background: #d4edda;
-            color: #155724;
-            border-color: #28a745;
+            background: #ecf8ee;
+            color: #14532d;
+            border-color: #22c55e;
         }
-        
+
         .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
+            background: #fde8ea;
+            color: #881337;
+            border-color: #f43f5e;
         }
-        
+
+        html[data-theme="dark"] .message.success {
+            background: #064e3b;
+            color: #d1fae5;
+        }
+
+        html[data-theme="dark"] .message.error {
+            background: #7f1d1d;
+            color: #fee2e2;
+        }
+
         footer {
-            background: #f8f9fa;
+            background: rgba(248, 249, 250, 0.9);
             text-align: center;
-            padding: 20px;
-            color: #666;
-            border-top: 1px solid #e0e0e0;
+            padding: 24px 0;
+            color: #475569;
+            border-top: 1px solid rgba(15, 23, 42, 0.08);
         }
-        
+
+        html[data-theme="dark"] footer {
+            background: rgba(31, 41, 55, 0.95);
+            color: #d1d5db;
+            border-top-color: #374151;
+        }
+
         {% block extra_css %}{% endblock %}
     </style>
+    <script>
+        (function initTheme() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
 </head>
 <body>
-    <div class="container">
+    <div class="page-shell">
         <header>
-            <h1>🏨 Система бронювання номерів</h1>
-            <p>Заброньте ідеальний номер для вас</p>
+            <div class="header-inner container">
+                <div class="site-brand">
+                    <span>🏨</span>
+                    <div>
+                        <h1>{{ settings.site_title }}</h1>
+                        <p class="site-description">{{ settings.site_description }}</p>
+                    </div>
+                </div>
+                <nav>
+                    <a href="{% url 'room_list' %}" class="nav-link">Всі кімнати</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'my_bookings' %}" class="nav-link">Мої бронювання</a>
+                        {% if user.is_staff %}
+                            <a href="{% url 'settings' %}" class="nav-action admin-link">⚙️ Настройки</a>
+                        {% endif %}
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-action">Вихід ({{ user.username }})</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="nav-action">Вхід</a>
+                    {% endif %}
+                    <a href="{% url 'admin:index' %}" class="nav-link">Адмін-панель</a>
+                    <button id="theme-toggle" class="theme-toggle" title="Переключити тему">☀️</button>
+                </nav>
+            </div>
         </header>
-        
-        <nav>
-            <a href="{% url 'room_list' %}">Всі номери</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'my_bookings' %}">Мої бронювання</a>
-                <a href="{% url 'admin:logout' %}">Вихід ({{ user.username }})</a>
-            {% else %}
-                <a href="{% url 'admin:login' %}">Вхід</a>
-            {% endif %}
-            <a href="{% url 'admin:index' %}">Панель адміністратора</a>
-        </nav>
-        
-        <main>
+        <main class="container">
             {% if messages %}
                 <div class="messages">
                     {% for message in messages %}
@@ -129,8 +285,31 @@
         </main>
         
         <footer>
-            <p>&copy; 2026 Система бронювання. Усі права захищені.</p>
+            <p>&copy; 2026 р. Система бронювання. Усі права захищені.</p>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            
+            function updateThemeIcon() {
+                const theme = localStorage.getItem('theme') || 'light';
+                toggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+            }
+            
+            toggle.addEventListener('click', function() {
+                const current = localStorage.getItem('theme') || 'light';
+                const next = current === 'light' ? 'dark' : 'light';
+                
+                localStorage.setItem('theme', next);
+                html.setAttribute('data-theme', next);
+                updateThemeIcon();
+            });
+            
+            updateThemeIcon();
+        });
+    </script>
 </body>
 </html>

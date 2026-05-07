@@ -8,9 +8,66 @@ class Room(models.Model):
     description = models.TextField()
     capacity = models.IntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    color = models.CharField(
+        max_length=7,
+        default='#667eea',
+        help_text='Колір кімнати у форматі HEX (наприклад: #FF5733)'
+    )
 
     def __str__(self):
         return self.name
+
+
+class Settings(models.Model):
+    """Глобальні настройки теми сайту"""
+    # Кольори фону
+    background_color = models.CharField(
+        max_length=7,
+        default='#ffffff',
+        help_text='Колір фону сайту'
+    )
+    primary_color = models.CharField(
+        max_length=7,
+        default='#667eea',
+        help_text='Основний колір (заголовки, кнопки)'
+    )
+    secondary_color = models.CharField(
+        max_length=7,
+        default='#764ba2',
+        help_text='Вторинний колір (градієнти, акценти)'
+    )
+    text_color = models.CharField(
+        max_length=7,
+        default='#333333',
+        help_text='Колір тексту'
+    )
+    
+    # Параметри сайту
+    site_title = models.CharField(
+        max_length=200,
+        default='Система бронювання кімнат',
+        help_text='Назва сайту'
+    )
+    site_description = models.TextField(
+        default='Зручна система бронювання номерів готелю',
+        help_text='Опис сайту'
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Настройки сайту'
+        verbose_name_plural = 'Настройки сайту'
+    
+    def __str__(self):
+        return 'Глобальні настройки'
+    
+    @classmethod
+    def get_settings(cls):
+        """Отримати або створити настройки за замовчуванням"""
+        settings, created = cls.objects.get_or_create(id=1)
+        return settings
 
 
 class Booking(models.Model):
