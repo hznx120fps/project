@@ -1,0 +1,93 @@
+{% extends 'booking/base.html' %}
+
+{% block title %}Головна{% endblock %}
+
+{% block extra_css %}
+<style>
+    .home-hero {
+        min-height: calc(100vh - 255px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 0;
+    }
+
+    .home-card {
+        width: min(780px, 100%);
+        background: #fff;
+        border-radius: 28px;
+        padding: 42px 40px;
+        box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        text-align: center;
+    }
+
+    .home-card h1 {
+        font-size: 2.5rem;
+        margin-bottom: 18px;
+    }
+
+    .home-card p {
+        margin-bottom: 28px;
+        color: #475569;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .home-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .home-actions a,
+    .home-actions button {
+        padding: 14px 24px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: #fff;
+    }
+
+    .btn-secondary {
+        background: #f8fafc;
+        color: var(--primary-color);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .home-actions a:hover,
+    .home-actions button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="home-hero">
+    <section class="home-card">
+        <h1>Ласкаво просимо до системи бронювання</h1>
+        {% if user.is_authenticated %}
+            <p>Привіт, {{ user.username }}! Ви можете перейти до своїх бронювань або переглянути доступні кімнати.</p>
+            <div class="home-actions">
+                <a href="{% url 'room_list' %}" class="btn-primary">Перейти до кімнат</a>
+                <a href="{% url 'my_bookings' %}" class="btn-secondary">Мої бронювання</a>
+            </div>
+        {% else %}
+            <p>Увійдіть або зареєструйтеся, щоб забронювати номер, переглянути історію бронювань та користуватися сервісом.</p>
+            <div class="home-actions">
+                <a href="{% url 'login' %}" class="btn-primary">Увійти</a>
+                <a href="{% url 'register' %}" class="btn-secondary">Реєстрація</a>
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

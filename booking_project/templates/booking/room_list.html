@@ -6,90 +6,225 @@
 <style>
     .rooms-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 28px;
         margin-top: 30px;
     }
-    
+
     .room-card {
-        background: white;
-        border-radius: 10px;
+        background: var(--card-bg);
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        border: 1px solid #e0e0e0;
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--border-light);
     }
-    
+
     .room-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.14);
     }
-    
+
     .room-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--room-color) 0%, rgba(0,0,0,0.1) 100%);
         color: white;
-        padding: 20px;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
-    
+
     .room-header h3 {
-        font-size: 1.5em;
-        margin-bottom: 5px;
+        font-size: 1.4rem;
+        margin: 0;
+        flex: 1;
+        font-weight: 700;
     }
-    
+
+    .color-indicator {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 2px solid rgba(255,255,255,0.6);
+        flex-shrink: 0;
+        margin-left: 12px;
+    }
+
     .room-body {
-        padding: 20px;
+        padding: 24px;
     }
-    
+
     .room-info {
-        margin-bottom: 15px;
+        margin-bottom: 16px;
         line-height: 1.6;
     }
-    
+
     .room-info p {
-        margin: 8px 0;
-        color: #555;
+        margin: 10px 0;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
     }
-    
+
     .info-label {
-        font-weight: 600;
-        color: #333;
+        font-weight: 700;
+        color: var(--text-primary);
     }
-    
+
     .price {
-        font-size: 1.8em;
-        color: #28a745;
-        font-weight: bold;
-        margin: 15px 0;
+        font-size: 1.8rem;
+        color: #22c55e;
+        font-weight: 800;
+        margin: 18px 0;
     }
-    
+
     .btn {
         display: inline-block;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
         color: white;
-        padding: 12px 30px;
-        border-radius: 5px;
+        padding: 12px 24px;
+        border-radius: 12px;
         text-decoration: none;
         border: none;
         cursor: pointer;
-        font-size: 1em;
-        transition: opacity 0.3s;
+        font-size: 0.95rem;
+        font-weight: 700;
+        transition: opacity 0.2s ease, transform 0.2s ease;
         width: 100%;
         text-align: center;
     }
-    
+
     .btn:hover {
-        opacity: 0.9;
+        opacity: 0.95;
+        transform: translateY(-1px);
     }
-    
+
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: #999;
+        color: var(--text-secondary);
     }
     
     .empty-state-icon {
-        font-size: 4em;
+        font-size: 4rem;
         margin-bottom: 20px;
+    }
+
+    .selected-color-display {
+        width: 100%;
+        height: 100px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14);
+        animation: slideDown 0.4s ease-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.4rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .color-filter {
+        background: var(--card-bg);
+        padding: 28px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+        border: 1px solid var(--border-light);
+    }
+
+    .filter-label {
+        font-weight: 700;
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        display: block;
+        margin-bottom: 18px;
+    }
+
+    .color-buttons {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .color-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
+        flex-shrink: 0;
+    }
+
+    .color-btn:hover {
+        transform: scale(1.15);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+    }
+
+    .color-btn.active {
+        border-color: var(--text-primary);
+        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.2);
+    }
+
+    .color-btn.active::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-weight: bold;
+        font-size: 1.8rem;
+        text-shadow: 0 0 6px rgba(0,0,0,0.6);
+    }
+
+    .reset-filter {
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 700;
+        color: white;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
+    }
+
+    .reset-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+    }
+
+    h2 {
+        color: var(--text-primary);
+        margin-bottom: 28px;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    p {
+        color: var(--text-secondary);
+        font-weight: 600;
     }
 </style>
 {% endblock %}
@@ -97,12 +232,39 @@
 {% block content %}
 <h2>Доступні номери</h2>
 
+{% if selected_color %}
+    <div class="selected-color-display" style="background: linear-gradient(135deg, {{ selected_color }} 0%, rgba(0,0,0,0.15) 100%);">
+        🎨 Вибрано: {{ selected_color|upper }}
+    </div>
+    <p style="margin-bottom: 20px;">
+        Показано {{ rooms|length }} з {{ color_match_count }} доступних кімнат цього кольору. Якщо ви хочете бачити більше, очистіть фільтр.
+    </p>
+{% endif %}
+
+<!-- Фільтр за кольором -->
+<div class="color-filter">
+    <span class="filter-label">🎨 Виберіть колір комнати:</span>
+    <div class="color-buttons">
+        <a href="{% url 'room_list' %}" class="reset-filter">✕ Очистити</a>
+        
+        {% for color in all_colors %}
+            {% if color|lower == selected_color|lower %}
+                <div class="color-btn active" style="background-color: {{ color }};"></div>
+            {% else %}
+                <a href="?color={{ color|urlencode }}" class="color-btn" style="background-color: {{ color }}; text-decoration: none;"></a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Список комнат -->
 {% if rooms %}
     <div class="rooms-grid">
         {% for room in rooms %}
             <div class="room-card">
-                <div class="room-header">
+                <div class="room-header" style="--room-color: {{ room.color }}">
                     <h3>{{ room.name }}</h3>
+                    <div class="color-indicator" style="background-color: {{ room.color }};"></div>
                 </div>
                 <div class="room-body">
                     <div class="room-info">
@@ -119,7 +281,11 @@
     <div class="empty-state">
         <div class="empty-state-icon">🏨</div>
         <h3>Номери не знайдені</h3>
-        <p>Наразі немає доступних номерів. Будь ласка, повертайтеся пізніше.</p>
+        {% if selected_color %}
+            <p>Немає комнат цього кольору. <a href="{% url 'room_list' %}">Очистити фільтр</a></p>
+        {% else %}
+            <p>Наразі немає доступних номерів. Будь ласка, повертайтеся пізніше.</p>
+        {% endif %}
     </div>
 {% endif %}
 {% endblock %}

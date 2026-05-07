@@ -1,0 +1,110 @@
+{% extends 'booking/base.html' %}
+
+{% block title %}Увійти{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-page {
+        min-height: calc(100vh - 230px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 0;
+    }
+
+    .auth-card {
+        width: min(480px, 100%);
+        background: #fff;
+        border-radius: 26px;
+        padding: 44px 36px;
+        box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
+        border: 1px solid rgba(15, 23, 42, 0.06);
+    }
+
+    .auth-card h2 {
+        font-size: 2rem;
+        margin-bottom: 14px;
+        color: #111827;
+    }
+
+    .auth-card p {
+        margin-bottom: 28px;
+        color: #475569;
+        line-height: 1.75;
+    }
+
+    .auth-card form p {
+        margin-bottom: 18px;
+    }
+
+    .auth-card label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .auth-card input {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: 1px solid #d1d5db;
+        font-size: 1rem;
+        color: #111827;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .auth-card input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+    }
+
+    .auth-card button {
+        width: 100%;
+        margin-top: 12px;
+        padding: 14px 18px;
+        border-radius: 16px;
+        border: none;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .auth-card button:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+    }
+
+    .auth-card small {
+        display: block;
+        margin-top: 24px;
+        color: #64748b;
+        text-align: center;
+    }
+
+    .auth-card a {
+        color: var(--primary-color);
+        font-weight: 700;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <section class="auth-card">
+        <h2>Вхід до облікового запису</h2>
+        <p>Авторизуйтеся, щоб забронювати номер, перевірити свої бронювання або перейти до адміністрування.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Увійти</button>
+        </form>
+        <small>Немає акаунта? <a href="{% url 'register' %}">Зареєструватися</a></small>
+    </section>
+</div>
+{% endblock %}
